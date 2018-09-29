@@ -2,11 +2,11 @@
   <div class="m-month-box" v-clickOutside="closeSelect">
     <div class="u-box" :data-active="inputState">
       <span class="u-icon">
-        <i class="el-input__icon el-icon-date"></i>
+        <i class="u-icon-date"></i>
       </span>
-      <input class="u-it" type="text" placeholder="开始月" v-model="date[0]" @focus="openSelect" readonly="readonly">
-      <span class="u-to">至</span>
-      <input class="u-it" type="text" placeholder="结束月" v-model="date[1]" @focus="openSelect" readonly="readonly">
+      <input class="u-it" type="text" :placeholder="locale.startTime" v-model="date[0]" @focus="openSelect" readonly="readonly">
+      <span class="u-to">-</span>
+      <input class="u-it" type="text" :placeholder="locale.endTime" v-model="date[1]" @focus="openSelect" readonly="readonly">
     </div>
     <div class="u-date" :data-active="inputState">
       <div class="u-date-box">
@@ -14,7 +14,7 @@
           <div class="u-date-bd">
             <div class="u-date-tt">
               <button class="u-btn s-btn-fl" type="button" @click="previousYear(startTime)"></button>
-              <span class="u-date-y">{{ startTime.year }} 年</span>
+              <span class="u-date-y">{{ startTime.year }} {{ locale.year }}</span>
             </div>
             <div class="u-date-ct">
               <ul class="u-date-table">
@@ -30,7 +30,7 @@
         <div class="u-date-mn">
           <div class="u-date-bd">
             <div class="u-date-tt">
-              <span class="u-date-y">{{ endTime.year }} 年</span>
+              <span class="u-date-y">{{ endTime.year }} {{ locale.year }}</span>
               <button class="u-btn s-btn-fr" type="button" @click="nextYear(endTime)"></button>
             </div>
             <div class="u-date-ct">
@@ -468,7 +468,13 @@ export default {
     }
   },
   created () {
+    this.date = [moment(this.value[0]).format('YYYY-MM'), moment(this.value[1]).format('YYYY-MM')]
+    this.startTime.year = this.$moment(this.date[0] + '-01').format('YYYY')
+    this.endTime.year = this.$moment(this.date[1] + '-01').add(1, 'year').format('YYYY')
+    this.selectDateValue.start = this.date[0]
+    this.selectDateValue.end = this.date[1]
     this.init()
+    this.initDateBox()
   },
   mounted () {
   },
@@ -489,6 +495,7 @@ export default {
     width: 100%;
     font-size: 12px;
     line-height: 28px;
+    align-items: center;
     border-radius: 4px;
     border: 1px solid #dcdfe6;
     background-color: #fff;
@@ -534,8 +541,12 @@ export default {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     line-height: 28px;
   }
-  .u-box .u-icon .el-icon-date {
-    line-height: 28px;
+  .u-box .u-icon .u-icon-date {
+    display: block;
+    margin-left: 5px;
+    width: 18px;
+    height: 18px;
+    background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAASABIDASIAAhEBAxEB/8QAGgABAAEFAAAAAAAAAAAAAAAAAAQBAgUGCf/EACgQAAIBBAEDAQkAAAAAAAAAAAECAAMEBRExBhIhBxMUFTNRcaGx4f/EABYBAQEBAAAAAAAAAAAAAAAAAAECAP/EABcRAQEBAQAAAAAAAAAAAAAAAAAxAQL/2gAMAwEAAhEDEQA/AOlHUXV1fE5QWdL3VAvs3Zrh2BKsTvQAPGvzwZAu/UCvQdXR8dVpKjsypVqbJAGgNoPJ8/yS8zfUbbNZBHu6VrUZLZlFS8FsWANTem0d8jxqY26yluMffB8nbv3WtZAvxcVtsQdAJ2jZ/XEvJB1W/q3coP1G4lKXy0+wiSOZi+IiCiIiZn//2Q==');
   }
 
   .u-date {
@@ -605,13 +616,16 @@ export default {
     line-height: 30px;
   }
   .u-btn {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAASABIDASIAAhEBAxEB/8QAGAABAQADAAAAAAAAAAAAAAAAAAYFBwn/xAAiEAACAgIDAAIDAQAAAAAAAAABAgMEBQYAERITIQciMTP/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EAB4RAAEDBAMAAAAAAAAAAAAAAAAhMfABAhFyUZGx/9oADAMBAAIRAxEAPwDpnuu6UtJxKWrMc1y3YlFajjqoDWLs7AlYo1JHZPRJJIVVDMxCqSJTWNy2nYstWxCpi3tUJi+fyFdHepV7JZaMBLAyzhSoaT6VQPRQFggyO/abdtZnG7dgVWfYsTBLXSnYk6it1pCplhBP+Uh8KVkXr7UBu17HJL8T7BBpdPGYeKvaOnZGxJFirdiArYx9kyN8lC6P77+T2Embv2f1di/lpbatVeYnKbrmRpnrxddz8cccgHHHHAHHHHAP/9k=');
+    background-size: 14px 14px;
   }
   .s-btn-fl {
-    font-family: element-icons !important;
     font-size: 12px;
     color: #303133;
     border: 0;
-    background: 0 0;
     cursor: pointer;
     outline: 0;
     margin-top: 8px;
@@ -627,14 +641,12 @@ export default {
     -webkit-font-smoothing: antialiased;
   }
   .s-btn-fl:before {
-    content: "\E610";
+    /*content: "\E610";*/
   }
   .s-btn-fr {
-    font-family: element-icons !important;
     font-size: 12px;
     color: #303133;
     border: 0;
-    background: 0 0;
     cursor: pointer;
     outline: 0;
     margin-top: 8px;
@@ -647,10 +659,11 @@ export default {
     line-height: 1;
     vertical-align: baseline;
     display: inline-block;
+    transform: rotate(180deg);
     -webkit-font-smoothing: antialiased;
   }
   .s-btn-fr:before {
-    content: "\E613";
+    /*content: "\E613";*/
   }
   .u-date-y {
     font-size: 16px;

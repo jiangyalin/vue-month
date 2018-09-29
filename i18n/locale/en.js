@@ -1,4 +1,7 @@
 export default {
+  startTime: 'Start Time',
+  endTime: 'End Time',
+  year: '',
   month1: 'January',
   month2: 'February',
   month3: 'March',

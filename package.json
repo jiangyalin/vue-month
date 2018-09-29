@@ -1,6 +1,6 @@
 {
   "name": "vue-month",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "月份段选择器",
   "author": "yalinJiang",
   "dependencies": {

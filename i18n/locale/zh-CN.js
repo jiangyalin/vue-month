@@ -1,4 +1,7 @@
 export default {
+  startTime: '开始时间',
+  endTime: '结束时间',
+  year: '年',
   month1: '1 月',
   month2: '2 月',
   month3: '3 月',
