@@ -51,11 +51,12 @@
 
 <script>
 import moment from 'moment'
+import i18n from './i18n'
 export default {
   name: 'm-month',
   data () {
     return {
-      date: [moment('2017-03').format('YYYY-MM'), moment('2019-08').format('YYYY-MM')],
+      date: [moment().format('YYYY-MM'), moment().format('YYYY-MM')],
       selectState: 'none',
       selectDateValue: {
         start: moment('2017-03-01').format('YYYY-MM'),
@@ -64,141 +65,89 @@ export default {
       startTime: {
         name: 'start',
         year: moment().format('YYYY'),
-        month: [{
-          name: '一月',
-          value: '01',
-          active: false,
-          state: 'none'
-        }, {
-          name: '二月',
-          value: '02',
-          active: false,
-          state: 'none'
-        }, {
-          name: '三月',
-          value: '03',
-          active: true,
-          state: 'start'
-        }, {
-          name: '四月',
-          value: '04',
-          active: true,
-          state: 'during'
-        }, {
-          name: '五月',
-          value: '05',
-          active: true,
-          state: 'during'
-        }, {
-          name: '六月',
-          value: '06',
-          active: true,
-          state: 'during'
-        }, {
-          name: '七月',
-          value: '07',
-          active: true,
-          state: 'during'
-        }, {
-          name: '八月',
-          value: '08',
-          active: true,
-          state: 'during'
-        }, {
-          name: '九月',
-          value: '09',
-          active: true,
-          state: 'during'
-        }, {
-          name: '十月',
-          value: '10',
-          active: true,
-          state: 'during'
-        }, {
-          name: '十一月',
-          value: '11',
-          active: true,
-          state: 'during'
-        }, {
-          name: '十二月',
-          value: '12',
-          active: true,
-          state: 'during'
-        }]
+        month: []
       },
       endTime: {
         name: 'end',
         year: moment().add(1, 'year').format('YYYY'),
-        month: [{
-          name: '一月',
-          value: '01',
-          active: true,
-          state: 'during'
-        }, {
-          name: '二月',
-          value: '02',
-          active: true,
-          state: 'during'
-        }, {
-          name: '三月',
-          value: '03',
-          active: true,
-          state: 'during'
-        }, {
-          name: '四月',
-          value: '04',
-          active: true,
-          state: 'during'
-        }, {
-          name: '五月',
-          value: '05',
-          active: true,
-          state: 'during'
-        }, {
-          name: '六月',
-          value: '06',
-          active: true,
-          state: 'during'
-        }, {
-          name: '七月',
-          value: '07',
-          active: true,
-          state: 'during'
-        }, {
-          name: '八月',
-          value: '08',
-          active: true,
-          state: 'end'
-        }, {
-          name: '九月',
-          value: '09',
-          active: false,
-          state: 'none'
-        }, {
-          name: '十月',
-          value: '10',
-          active: false,
-          state: 'none'
-        }, {
-          name: '十一月',
-          value: '11',
-          active: false,
-          state: 'none'
-        }, {
-          name: '十二月',
-          value: '12',
-          active: false,
-          state: 'none'
-        }]
+        month: []
       },
       inputState: false,
-      annalIndex: 0
+      annalIndex: 0,
+      locale: {},
+      i18n: 'zh-CN'
     }
   },
-  props: ['value'],
+  props: ['value', 'lang'],
   components: {
   },
   methods: {
+    init () {
+      this.i18n = this.lang || this.i18n
+      this.locale = i18n(this.i18n)
+      this.startTime.month = [{
+        name: this.locale.month1,
+        value: '01',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month2,
+        value: '02',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month3,
+        value: '03',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month4,
+        value: '04',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month5,
+        value: '05',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month6,
+        value: '06',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month7,
+        value: '07',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month8,
+        value: '08',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month9,
+        value: '09',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month10,
+        value: '10',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month11,
+        value: '11',
+        active: false,
+        state: 'none'
+      }, {
+        name: this.locale.month12,
+        value: '12',
+        active: false,
+        state: 'none'
+      }]
+      this.endTime.month = this.startTime.month
+    },
     openSelect () {
       this.inputState = true
       this.selectDateValue.start = moment(this.date[0] + '-01').format('YYYY-MM')
@@ -519,8 +468,14 @@ export default {
     }
   },
   created () {
+    this.init()
   },
   mounted () {
+  },
+  watch: {
+    lang () {
+      this.init()
+    }
   }
 }
 </script>
